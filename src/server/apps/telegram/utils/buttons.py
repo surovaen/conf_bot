@@ -1,0 +1,8 @@
+CONTINUE = 'ПРОДОЛЖИТЬ'
+MENU = 'МЕНЮ'
+PHONE_NUMBER = 'Отправить номер телефона'
+PAID = 'ОПЛАТИТЬ {price}'
+PRERECORD = 'ПРЕДЗАПИСЬ'
+DETAILS = 'ПОДРОБНЕЕ'
+PERSONAL_WORK = 'Хочу в личную работу'
+PROMO = 'ВВЕСТИ ПРОМОКОД'
