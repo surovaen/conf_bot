@@ -25,13 +25,13 @@ services:
     <<: *app_default
     command: celery --app server.celery_app.app beat --loglevel=info
 
-  bot:
-    <<: *app_default
-    command: python manage.py run_bot
-    depends_on:
-      - db
-      - redis
-      - app
+#  bot:
+#    <<: *app_default
+#    command: python manage.py run_bot
+#    depends_on:
+#      - db
+#      - redis
+#      - app
 
   nginx:
     build:
