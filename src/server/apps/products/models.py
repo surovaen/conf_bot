@@ -13,14 +13,6 @@ class Conference(BaseProductModel):
         verbose_name='Участники',
         through='ConferenceUser',
     )
-    questions = models.ManyToManyField(
-        PreRecordingQuestion,
-        verbose_name='Вопросы предзаписи',
-        blank=True,
-    )
-    price = models.PositiveIntegerField(
-        'Стоимость участия',
-    )
 
     class Meta:
         verbose_name = 'Конференция'
@@ -44,11 +36,6 @@ class ConferenceUser(models.Model):
         verbose_name='Участник',
         on_delete=models.CASCADE,
         related_name='conferences',
-    )
-    answers = models.JSONField(
-        'Ответы на вопросы предзаписи',
-        blank=True,
-        null=True,
     )
     is_paid = models.BooleanField(
         'Оплачено',

@@ -4,6 +4,7 @@ from server.apps.telegram.database.configurations import (
     PersonalWorkDBManager,
     PodcastDBManager,
     PromotionalCodeDBManager,
+    TicketCategoryDBManager,
     UserLimitDBManager,
 )
 from server.apps.telegram.database.feedback import FeedbackDBManager
@@ -31,3 +32,4 @@ feedback_db_manager = FeedbackDBManager()
 userlimit_db_manager = UserLimitDBManager()
 menubutton_db_manager = MenuButtonDBManager()
 promo_db_manager = PromotionalCodeDBManager()
+tickets_db_manager = TicketCategoryDBManager()

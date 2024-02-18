@@ -11,11 +11,7 @@ from server.apps.telegram.database.managers import (
 )
 from server.apps.telegram.handlers.decorator import ErrorHandler
 from server.apps.telegram.handlers.enums import Callback
-from server.apps.telegram.handlers.utils import (
-    create_payment,
-    get_callback_details,
-    get_media_path,
-)
+from server.apps.telegram.handlers.utils import create_payment, get_media_path
 from server.apps.telegram.states.enums import StageType, StateType
 from server.apps.telegram.utils import buttons, messages
 from server.apps.telegram.utils.keyboards import KeyboardConstructor
@@ -97,7 +93,8 @@ async def breakfast_callback(callback: CallbackQuery, bot: AsyncTeleBot):
 @ErrorHandler.create()
 async def breakfast_details_callback(callback: CallbackQuery, bot: AsyncTeleBot):
     """Обработка получения информации о коуч-завтраке."""
-    uuid = get_callback_details(callback.data, Callback.BREAKFAST_DETAILS)
+    uuid = callback.data.split('_')[-1]
+
     breakfast = await breakfast_db_manager.get(uuid=uuid)
     text = '{date}\n{title}\n\n{description}\n\nМесто: {place}'.format(
         date=breakfast.date.strftime('%d.%m.%Y'),
@@ -122,7 +119,8 @@ async def breakfast_details_callback(callback: CallbackQuery, bot: AsyncTeleBot)
 async def breakfast_payment_callback(callback: CallbackQuery, bot: AsyncTeleBot):
     """Обработка платежа за коуч-завтрак."""
     keyboard = KeyboardConstructor().create_menu_keyboard()
-    uuid = get_callback_details(callback.data, Callback.BREAKFAST_PAYMENT)
+    uuid = callback.data.split('_')[-1]
+
     breakfast = await breakfast_db_manager.get(uuid=uuid)
 
     paid_count = await breakfast_db_manager.get_paid_count(obj=breakfast)
@@ -186,9 +184,8 @@ async def breakfast_payment_callback(callback: CallbackQuery, bot: AsyncTeleBot)
 @ErrorHandler.create()
 async def menu_breakfast_callback(callback: CallbackQuery, bot: AsyncTeleBot):
     """Обработка колбека выбранной позиции меню по коуч-завтраку."""
-    data = get_callback_details(callback.data, Callback.MENU)
-    breakfast_uuid = data[:36]
-    position_id = data[37:]
+    breakfast_uuid = callback.data.split('_')[1]
+    position_id = callback.data.split('_')[-1]
 
     breakfast = await breakfast_db_manager.get(uuid=breakfast_uuid)
     position = await menu_db_manager.get(position_id=position_id)

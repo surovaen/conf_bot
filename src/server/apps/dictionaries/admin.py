@@ -6,6 +6,7 @@ from server.apps.dictionaries.models import (
     Menu,
     PreRecordingQuestion,
     PromotionalCode,
+    TicketCategory,
     UserLimit,
 )
 
@@ -33,3 +34,8 @@ class PreRecordingQuestionAdmin(admin.ModelAdmin):
 @admin.register(PromotionalCode)
 class PromotionalCodeAdmin(admin.ModelAdmin):
     list_display = ('title', 'discount',)
+
+
+@admin.register(TicketCategory)
+class TicketCategoryAdmin(admin.ModelAdmin):
+    list_display = ('type', 'price')

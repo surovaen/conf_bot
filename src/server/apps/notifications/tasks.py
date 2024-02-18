@@ -86,13 +86,11 @@ def notify(notifications: list) -> None:
             chat_ids = notification.event.users.filter(is_paid=True).values_list('user__tg_chat_id')
 
         if notification.type == NotificationTypesEnum.BEFORE_EVENT:
-            message = message.format(
-                date=notification.event.date.strftime('%d.%m.%Y'),
-                time=notification.event.time.strftime('%H:%M') if notification.event.time else '',
-            )
 
             if isinstance(notification.event, Breakfast):
                 message = message.format(
+                    date=notification.event.date.strftime('%d.%m.%Y'),
+                    time=notification.event.time.strftime('%H:%M') if notification.event.time else '',
                     title=notification.event.title,
                 )
                 uuid = str(notification.event.uuid)
@@ -105,7 +103,17 @@ def notify(notifications: list) -> None:
                         },
                     )
             if isinstance(notification.event, Game):
+                message = message.format(
+                    date=notification.event.date.strftime('%d.%m.%Y'),
+                    time=notification.event.time.strftime('%H:%M') if notification.event.time else '',
+                )
                 file = notification.file.path if notification.file else None
+
+            else:
+                message = message.format(
+                    date=notification.event.date.strftime('%d.%m.%Y'),
+                    time=notification.event.time.strftime('%H:%M') if notification.event.time else '',
+                )
 
         if notification.type == NotificationTypesEnum.AFTER_EVENT:
             uuid = str(notification.event.uuid)

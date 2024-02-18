@@ -10,7 +10,6 @@ from server.apps.telegram.database.managers import (
     promo_db_manager,
     user_db_manager,
 )
-from server.apps.telegram.handlers.enums import Callback
 
 
 async def check_promo(promo: str) -> Tuple[bool, Optional[int]]:
@@ -68,6 +67,7 @@ async def create_payment(
         product: ProductTypes,
         event_uuid: str,
         price: Union[int, str],
+        ticket: str = None,
 ) -> str:
     """Функция создания платежа и генерации ссылки на оплату."""
     user = await user_db_manager.get(user_id)
@@ -77,7 +77,11 @@ async def create_payment(
         'product_id': event_uuid,
         'price': price,
     }
+    if ticket is not None:
+        payment_data['ticket'] = ticket
     payment_id = await payment_db_manager.create(payment_data)
+    if ticket is not None:
+        payment_data.pop('ticket')
     payment_data.update(
         {
             'payment_id': payment_id,
@@ -90,8 +94,3 @@ async def create_payment(
 def get_media_path(file: str) -> Path:
     """Функция формирования полного пути до файла."""
     return Path(settings.MEDIA_ROOT).joinpath(file)
-
-
-def get_callback_details(data: str, callback: Callback):
-    """Функция получения уникальных данных из колбека."""
-    return data[len(callback.value) + 1:]

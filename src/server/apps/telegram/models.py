@@ -33,6 +33,11 @@ class BotUser(models.Model):
         'chat_id',
         max_length=255,
     )
+    instagram = models.CharField(
+        'instagram',
+        max_length=255,
+        default='',
+    )
 
     class Meta:
         verbose_name = 'Пользователь бота'

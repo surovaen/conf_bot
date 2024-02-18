@@ -1,5 +1,6 @@
 from django.db import models
 
+from server.apps.dictionaries.enums import TicketType
 from server.apps.payments.enums import PaymentStatuses, ProductTypes
 from server.apps.telegram.models import BotUser
 
@@ -36,6 +37,12 @@ class Payment(models.Model):
     data = models.JSONField(
         'Данные платежа',
         null=True,
+    )
+    ticket = models.CharField(
+        'Категория билета',
+        max_length=255,
+        choices=TicketType.choices,
+        default=TicketType.NONE,
     )
 
     class Meta:

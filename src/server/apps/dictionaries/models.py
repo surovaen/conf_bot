@@ -1,6 +1,8 @@
 from django.db import models
 from solo.models import SingletonModel
 
+from server.apps.dictionaries.enums import TicketType
+
 
 class Menu(models.Model):
     """Модель завтраков."""
@@ -91,3 +93,32 @@ class PromotionalCode(models.Model):
     class Meta:
         verbose_name = 'Промокод'
         verbose_name_plural = 'Промокоды'
+
+
+class TicketCategory(models.Model):
+    """Модель билета на конференцию."""
+
+    type = models.CharField(
+        'Тип билета',
+        max_length=255,
+        choices=TicketType.choices,
+        default=TicketType.SILVER
+    )
+    description = models.TextField(
+        'Описание',
+    )
+    price = models.PositiveIntegerField(
+        'Цена',
+        default=0,
+    )
+    limit = models.PositiveIntegerField(
+        'Лимит количества билетов',
+        default=0,
+    )
+
+    def __str__(self):
+        return f'{self.type}'
+
+    class Meta:
+        verbose_name = 'Категория билета'
+        verbose_name_plural = 'Категории билетов'

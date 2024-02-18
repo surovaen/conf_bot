@@ -4,7 +4,7 @@ from django.core.management import BaseCommand
 from loguru import logger
 from telebot import util
 
-from server.apps.telegram.bot import bot
+from server.apps.telegram.main import bot
 
 
 class Command(BaseCommand):
@@ -19,4 +19,4 @@ class Command(BaseCommand):
         except KeyboardInterrupt:
             logger.error('Бот остановлен')
         except Exception as exc:
-            logger.error('Ошибка работы бота: {exc}'.format(exc=exc))
+            logger.error('Ошибка запуска бота: {exc}'.format(exc=exc))

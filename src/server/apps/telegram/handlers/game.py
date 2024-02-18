@@ -10,11 +10,7 @@ from server.apps.telegram.database.managers import (
 )
 from server.apps.telegram.handlers.decorator import ErrorHandler
 from server.apps.telegram.handlers.enums import Callback
-from server.apps.telegram.handlers.utils import (
-    create_payment,
-    get_callback_details,
-    get_media_path,
-)
+from server.apps.telegram.handlers.utils import create_payment, get_media_path
 from server.apps.telegram.states.enums import StageType, StateType
 from server.apps.telegram.utils import buttons, messages
 from server.apps.telegram.utils.keyboards import KeyboardConstructor
@@ -98,10 +94,8 @@ async def game_callback(callback: CallbackQuery, bot: AsyncTeleBot):
 async def game_payment_callback(callback: CallbackQuery, bot: AsyncTeleBot):
     """Обработка платежа участия в игре."""
     keyboard = KeyboardConstructor().create_menu_keyboard()
-    uuid = get_callback_details(
-        data=callback.data,
-        callback=Callback.GAME_PAYMENT,
-    )
+    uuid = callback.data.split('_')[-1]
+
     game = await game_db_manager.get(uuid=uuid)
 
     paid_count = await game_db_manager.get_paid_count(obj=game)

@@ -9,11 +9,7 @@ class RedisCacheManager:
     store = cache_store
 
     @classmethod
-    def set(
-            cls,
-            key: int,
-            **kwargs,
-    ) -> None:
+    def set(cls, key: int, **kwargs) -> None:
         """Добавление записи в кеш."""
         key = str(key)
         data = cls.store.get(key=key)
@@ -26,19 +22,13 @@ class RedisCacheManager:
         return cls.store.add(key=key, data=data)
 
     @classmethod
-    def get(
-            cls,
-            key: int,
-    ) -> Dict[str, str]:
+    def get(cls, key: int) -> Dict[str, str]:
         """Получение записи из кеша."""
         key = str(key)
         return cls.store.get(key=key)
 
     @classmethod
-    def delete(
-            cls,
-            key: int,
-    ) -> None:
+    def delete(cls, key: int) -> None:
         """Удаление записи из кеша."""
         key = str(key)
         cls.store.delete(key=key)

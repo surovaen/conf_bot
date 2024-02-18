@@ -17,11 +17,7 @@ class RedisStorage:
     """Класс хранилища кэша в Redis."""
 
     @classmethod
-    def add(
-            cls,
-            key: str,
-            data: Dict[str, str],
-    ) -> None:
+    def add(cls, key: str, data: Dict[str, str]) -> None:
         """Метод добавления записи в кеш."""
         redis.set(
             name=key,
@@ -29,19 +25,13 @@ class RedisStorage:
         )
 
     @classmethod
-    def get(
-            cls,
-            key: str,
-    ) -> Dict[str, str]:
+    def get(cls, key: str) -> Dict[str, str]:
         """Метод получения записи из кэша."""
         result = redis.get(key)
         return json.loads(result) if result else None
 
     @classmethod
-    def delete(
-            cls,
-            key: str,
-    ) -> None:
+    def delete(cls, key: str) -> None:
         """Метод удаления записи из кеша."""
         redis.delete(key)
 

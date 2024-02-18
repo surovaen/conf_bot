@@ -7,6 +7,7 @@ from django.urls import include, path
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('server.api.urls')),
+    path('bot/', include('server.apps.telegram.urls')),
 ]
 
 if settings.DEBUG:

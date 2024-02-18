@@ -4,9 +4,9 @@ from asgiref.sync import async_to_sync
 from telebot.types import InputMediaPhoto
 
 from server import celery_app
-from server.apps.telegram.bot import bot
 from server.apps.telegram.cache.manager import RedisCacheManager
 from server.apps.telegram.handlers.utils import get_media_path
+from server.apps.telegram.main import bot
 from server.apps.telegram.utils.keyboards import KeyboardConstructor
 
 

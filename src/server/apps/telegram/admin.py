@@ -8,7 +8,7 @@ class BotUserAdmin(admin.ModelAdmin):
     list_display = ('__str__', 'phone_number',)
     fields = (
         'username', 'first_name', 'last_name',
-        'phone_number', 'tg_user_id', 'tg_chat_id',
+        'phone_number', 'instagram', 'tg_user_id', 'tg_chat_id',
     )
 
 

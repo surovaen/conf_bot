@@ -13,23 +13,22 @@ from server.apps.products.models import (
     Breakfast,
     BreakfastUser,
     Conference,
-    ConferenceUser,
     Course,
     CourseUser,
     Game,
 )
 from server.apps.telegram.database.core.managers import (
+    BaseProductDBManager,
     ProductLimitUserDBManager,
     ProductQuestionsDBManager,
 )
 
 
-class ConferenceDBManager(ProductQuestionsDBManager):
+class ConferenceDBManager(BaseProductDBManager):
     """Класс-менеджер работы с моделями CommonConference и Conference."""
 
     _common_model = CommonConference
     _model = Conference
-    _user_model = ConferenceUser
 
 
 class CourseDBManager(ProductQuestionsDBManager):

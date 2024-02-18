@@ -5,7 +5,6 @@ from telebot.types import (
     InlineKeyboardMarkup,
     KeyboardButton,
     ReplyKeyboardMarkup,
-    ReplyKeyboardRemove,
 )
 
 from server.apps.telegram.database.managers import menubutton_db_manager
@@ -53,20 +52,14 @@ class KeyboardConstructor:
         reply_buttons = await menubutton_db_manager.get_buttons()
         return self.create_inline_keyboard(reply_buttons)
 
-    def create_inline_keyboard(
-            self,
-            data: Dict[str, str],
-    ) -> InlineKeyboardMarkup:
+    def create_inline_keyboard(self, data: Dict[str, str]) -> InlineKeyboardMarkup:
         """Метод формирования инлайн-клавиатуры."""
         inline_buttons = self._create_inline_buttons(data)
         keyboard = InlineKeyboardMarkup(row_width=self.row_width)
         keyboard.add(*inline_buttons)
         return keyboard
 
-    def create_reply_keyboard(
-            self,
-            data: List[dict],
-    ) -> ReplyKeyboardMarkup:
+    def create_reply_keyboard(self, data: List[dict]) -> ReplyKeyboardMarkup:
         """Метод формирования реплай-клавиатуры."""
         reply_buttons = self._create_reply_buttons(data)
         keyboard = ReplyKeyboardMarkup(
@@ -86,9 +79,3 @@ class KeyboardConstructor:
     def _create_reply_buttons(data: List[dict]) -> List[KeyboardButton]:
         """Метод формирования кнопок для реплай-клавиатуры."""
         return [KeyboardButton(**params) for params in data]
-
-    @staticmethod
-    def removed_keyboard():
-        """Метод возвращения удаляемой реплай-клавиатуры."""
-        keyboard = ReplyKeyboardRemove()
-        return keyboard

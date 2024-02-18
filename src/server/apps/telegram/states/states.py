@@ -37,7 +37,7 @@ class BaseState(Iterable):
 class UserInfoState(BaseState):
     """Класс состояний запроса информации о пользователе."""
 
-    _collection = [0, 1, 2]
+    _collection = [0, 1, 2, 3]
 
 
 class QuestionState(BaseState):

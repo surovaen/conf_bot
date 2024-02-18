@@ -55,17 +55,17 @@ class ConferenceFeedbackAdminInline(AddChangeNotPermissionAdminMixin, admin.Stac
 
 
 @admin.register(Conference)
-class ConferenceAdmin(AddPrerecordUserCountMixin, AddPaidUserCountMixin, admin.ModelAdmin):
+class ConferenceAdmin(AddPaidUserCountMixin, admin.ModelAdmin):
     inlines = (
         ConferenceUserAdminInline,
         ConferenceNotificationAdminInline,
         ConferenceFeedbackAdminInline,
     )
     fields = (
-        'is_shown', 'date', 'time', 'price', 'questions',
+        'is_shown', 'date', 'time',
     )
     list_display = (
-        'date', 'is_shown', 'user_count', 'user_paid_count',
+        'date', 'is_shown', 'user_paid_count',
     )
 
 

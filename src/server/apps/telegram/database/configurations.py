@@ -3,7 +3,12 @@ from typing import List, Optional
 from channels.db import database_sync_to_async
 
 from server.apps.configurations.models import Gift, PersonalWork, Podcast
-from server.apps.dictionaries.models import Menu, PromotionalCode, UserLimit
+from server.apps.dictionaries.models import (
+    Menu,
+    PromotionalCode,
+    TicketCategory,
+    UserLimit,
+)
 from server.apps.telegram.database.core.managers import BaseSingletonDBManager
 from server.apps.telegram.models import BotUser
 
@@ -115,4 +120,22 @@ class PromotionalCodeDBManager:
     def get(promo: str) -> Optional[PromotionalCode]:
         """Метод получения промокода."""
         data = PromotionalCode.objects.filter(title=promo).first()
+        return data
+
+
+class TicketCategoryDBManager:
+    """Класс-менеджер работы с моделью TicketCategory."""
+
+    @staticmethod
+    @database_sync_to_async
+    def get_tickets() -> Optional[List[dict]]:
+        """Метод получения билетов."""
+        data = TicketCategory.objects.all().order_by('pk').values('type', 'description', 'price')
+        return list(data)
+
+    @staticmethod
+    @database_sync_to_async
+    def get_ticket(ticket_type: str) -> Optional[TicketCategory]:
+        """Метод получения категории билетов."""
+        data = TicketCategory.objects.filter(type=ticket_type).first()
         return data

@@ -49,7 +49,7 @@ async def process_answers(message: Message, bot: AsyncTeleBot):
             keyboard = KeyboardConstructor().create_inline_keyboard(
                 {
                     buttons.PROMO: Callback.PROMO.value,
-                    buttons.PAID.format(price=price): Callback.CONFERENCE_PAYMENT_UUID.value.format(uuid=uuid),
+                    buttons.BUY.format(price=price): Callback.CONFERENCE_PAYMENT_UUID.value.format(uuid=uuid),
                 }
             )
             return await bot.send_message(
@@ -71,7 +71,7 @@ async def process_answers(message: Message, bot: AsyncTeleBot):
         text = messages.PROMO_SUCCESS_TEXT.format(promo=message.text)
         keyboard = KeyboardConstructor().create_inline_keyboard(
             {
-                buttons.PAID.format(price=new_price): Callback.CONFERENCE_PAYMENT_UUID.value.format(uuid=uuid),
+                buttons.BUY.format(price=new_price): Callback.CONFERENCE_PAYMENT_UUID.value.format(uuid=uuid),
             }
         )
         return await bot.send_message(
@@ -113,6 +113,7 @@ async def process_answers(message: Message, bot: AsyncTeleBot):
         key=message.from_user.id,
     )
 
+    state_type = user_data.pop('state_type')
     state = user_data.pop('state')
     stage = user_data.pop('stage')
 
@@ -128,13 +129,8 @@ async def process_answers(message: Message, bot: AsyncTeleBot):
             if stage == StageType.START.value:
                 text = messages.START_MENU_TEXT.format(name=user_data.get('first_name'))
                 keyboard = await KeyboardConstructor().create_main_keyboard()
-
-            if stage == StageType.CONF_QUESTIONS.value:
-                text = messages.CONTINUE_PRERECORD
-                keyboard = KeyboardConstructor().create_inline_keyboard(
-                    {
-                        buttons.CONTINUE: Callback.CONFERENCE_PRERECORD.value,
-                    },
+                RedisCacheManager.delete(
+                    key=message.from_user.id,
                 )
 
             if stage == StageType.COURSE_QUESTIONS.value:
@@ -144,6 +140,9 @@ async def process_answers(message: Message, bot: AsyncTeleBot):
                         buttons.CONTINUE: Callback.COURSE_PRERECORD.value,
                     },
                 )
+                RedisCacheManager.delete(
+                    key=message.from_user.id,
+                )
 
             if stage == StageType.PERSONAL_WORK.value:
                 text = messages.PERSONAL_WORK_TEXT
@@ -151,6 +150,9 @@ async def process_answers(message: Message, bot: AsyncTeleBot):
                     {
                         buttons.PERSONAL_WORK: Callback.PERSONAL_WORK.value,
                     },
+                )
+                RedisCacheManager.delete(
+                    key=message.from_user.id,
                 )
 
             if stage == StageType.BREAKFAST.value:
@@ -166,6 +168,9 @@ async def process_answers(message: Message, bot: AsyncTeleBot):
                 )
 
                 text = messages.PAYMENT_URL_TEXT + '\n\n' + payment_link
+                RedisCacheManager.delete(
+                    key=message.from_user.id,
+                )
 
             if stage == StageType.GAME.value:
                 price = user_data.pop('price')
@@ -181,6 +186,20 @@ async def process_answers(message: Message, bot: AsyncTeleBot):
 
                 text = messages.PAYMENT_URL_TEXT + '\n\n' + payment_link
 
+                RedisCacheManager.delete(
+                    key=message.from_user.id,
+                )
+
+            if stage == StageType.CONF_QUESTIONS.value:
+                price = user_data.get('price')
+                uuid = user_data.get('uuid')
+                text = messages.CONFERENCE_PAID_TEXT
+                keyboard = KeyboardConstructor().create_inline_keyboard(
+                    {
+                        buttons.BUY.format(price=price): Callback.CONFERENCE_PAYMENT_UUID.value.format(uuid=uuid),
+                    }
+                )
+
         if state_type == StateType.COURSE_QUESTIONS.value:
             uuid = user_data.pop('uuid')
             await course_db_manager.add_user_and_answers(
@@ -190,25 +209,8 @@ async def process_answers(message: Message, bot: AsyncTeleBot):
             )
             text = messages.AFTER_COURSE_RECORDING_TEXT
 
-        RedisCacheManager.delete(
-            key=message.from_user.id,
-        )
-
-        if state_type == StateType.CONF_QUESTIONS.value:
-            price = user_data.get('price')
-            uuid = user_data.get('uuid')
-
-            await conference_db_manager.add_user_and_answers(
-                user_id=message.from_user.id,
-                uuid=uuid,
-                answers=user_data,
-            )
-            text = messages.CONFERENCE_PAID_TEXT
-            keyboard = KeyboardConstructor().create_inline_keyboard(
-                {
-                    buttons.PROMO: Callback.PROMO.value,
-                    buttons.PAID.format(price=price): Callback.CONFERENCE_PAYMENT_UUID.value.format(uuid=uuid),
-                }
+            RedisCacheManager.delete(
+                key=message.from_user.id,
             )
 
     await bot.send_message(
