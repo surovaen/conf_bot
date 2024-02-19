@@ -13,8 +13,9 @@ from server.apps.telegram.utils.keyboards import KeyboardConstructor
 async def start(message: Message, bot: AsyncTeleBot):
     """Обработка команды '/start'."""
 
+    username = message.from_user.username if message.from_user.username else message.from_user.first_name
     user_data = {
-        'username': message.from_user.username,
+        'username': username,
         'tg_user_id': message.from_user.id,
         'tg_chat_id': message.chat.id,
     }
