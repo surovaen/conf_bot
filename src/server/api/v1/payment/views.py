@@ -25,7 +25,7 @@ def process_payment(request):
     if verified == 'false':
         raise AuthenticationFailed()
 
-    payment = Payment.objects.filter(pk=data.get('order_num')).first()
+    payment = Payment.objects.filter(pk=data.get('customer_extra')).first()
     if payment.status == PaymentStatuses.NEW:
         payment.data = data
         payment_status = data.get('payment_status')

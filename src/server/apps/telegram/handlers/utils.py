@@ -13,7 +13,7 @@ from server.apps.telegram.database.managers import (
 
 
 async def check_promo(promo: str) -> Tuple[bool, Optional[int]]:
-    """"""
+    """Проверка наличия промокода."""
     promo = await promo_db_manager.get(promo=promo)
     if not promo:
         return False, None
@@ -27,6 +27,7 @@ async def get_payment_url(payment_data: dict) -> str:
     price = payment_data.get('price')
     payment_id = payment_data.get('payment_id')
     phone_number = payment_data.get('user').phone_number
+    user_fullname = payment_data.get('user').full_name
 
     data = {
         'do': 'link',
@@ -38,8 +39,10 @@ async def get_payment_url(payment_data: dict) -> str:
             }
         ],
         'sys': '',
-        'order_id': str(payment_id),
+        'order_id': user_fullname,
         'customer_phone': phone_number,
+        'customer_extra': str(payment_id),
+        'paid_content': product.label,
     }
 
     data.pop('products')
