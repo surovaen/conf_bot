@@ -12,6 +12,7 @@ from server.apps.payments.models import Payment
 def process_payment(request):
     """Вебхук обработки результата платежа."""
     data = dict(request.data)
+    print(data)
     products = {
         'name': data.pop('products[0][name]')[0],
         'price': data.pop('products[0][price]')[0],
@@ -25,15 +26,17 @@ def process_payment(request):
     if verified == 'false':
         raise AuthenticationFailed()
 
-    payment = Payment.objects.filter(pk=data.get('customer_extra')).first()
-    if payment.status == PaymentStatuses.NEW:
-        payment.data = data
-        payment_status = data.get('payment_status')
+    if data.get('customer_extra'):
+        payment = Payment.objects.filter(pk=data.get('customer_extra')).first()
+        if payment:
+            if payment.status == PaymentStatuses.NEW:
+                payment.data = data
+                payment_status = data.get('payment_status')
 
-        if payment_status == 'success':
-            payment.status = PaymentStatuses.SUCCESS
-        else:
-            payment.status = PaymentStatuses.FAIL
-        payment.save(update_fields=['data', 'status'])
+                if payment_status == 'success':
+                    payment.status = PaymentStatuses.SUCCESS
+                else:
+                    payment.status = PaymentStatuses.FAIL
+                payment.save(update_fields=['data', 'status'])
 
     return Response(status=status.HTTP_200_OK)
