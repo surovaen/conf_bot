@@ -31,25 +31,10 @@ async def send_notification_message(
         image_paths = [
             get_media_path(*image) for image in images
         ]
-        first_image = open(image_paths[0], mode='rb')
-
-        if len(image_paths) == 1:
-            return await bot.send_photo(
-                chat_id,
-                photo=first_image,
-                caption=message,
-                reply_markup=keyboard,
-            )
-
         media_group = [
-            InputMediaPhoto(first_image, caption=message),
+            InputMediaPhoto(image.open(mode='rb')) for image in image_paths
         ]
-        media_group.extend(
-            [
-                InputMediaPhoto(open(image, mode='rb')) for image in image_paths[1:]
-            ]
-        )
-        return await bot.send_media_group(
+        await bot.send_media_group(
             chat_id,
             media=media_group,
         )
